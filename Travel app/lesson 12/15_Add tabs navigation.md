@@ -1,20 +1,9 @@
-# navigationOptions inside of a Navigator
-
-When defining a navigator, you can also add navigationOptions to it:
-
-```js
-const SomeNavigator = createStackNavigator(
-  {
-    ScreenIdentifier: SomeScreen,
-  },
-  {
-    navigationOptions: {
-      // You can set options here!
-      // Please note: This is NOT defaultNavigationOptions!
-    },
-  }
-);
+Install : 
 ```
+npm install @react-navigation/bottom-tabs
+```
+
+
 # Add tabs navigation - TripsNavigator.js
 
 ```js
