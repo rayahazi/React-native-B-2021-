@@ -1,22 +1,17 @@
 # 14_Header button
 
-- https://reactnavigation.org/docs/4.x/header-buttons
+### 1. In navigator
 
-### 1. In TripDetailScreen.js:
-
-- if we add headerRight -> it will be in the right corner of our header.
-- to make it fit to all screens:
-
+* Import Text
+* * Add headerRight
 ```js
-// Add navigation options object -> we can use the dynamic data.
-TripDetailScreen.navigationOptions = (navigationData) => {
-  const tripId = navigationData.navigation.getParam("tripId");
-  const selectedTrip = TRIPS.find((trip) => trip.id === tripId);
-  return {
-    headerTitle: selectedTrip.title,
-    headerRight: () => <Text>favorite</Text>,
-  };
-};
+ <Stack.Screen 
+        name="TripDetail" 
+        component={TripDetailScreen}
+        // Add:
+        options={({ route }) => ({ title: route.params.tripName })
+        , {headerRight: () => <Text>favorite</Text>}}
+        />
 ```
 
 ### 2. run:
