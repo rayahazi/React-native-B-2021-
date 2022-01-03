@@ -4,115 +4,105 @@
 
 ```js
 import React from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 
 import { COUNTRIES, TRIPS } from "../data/dummy-data";
+// 1. import:
 import TripItem from "../components/TripItem";
 
-const CountryTripScreen = (props) => {
-  const countryId = props.navigation.getParam("countryId");
-  const selectedCountry = COUNTRIES.find((country) => country.id === countryId);
-
-  const renderTripItem = (itemData) => {
-    return (
-      <TripItem
-        title={itemData.item.title}
-        onSelectTrip={() => {
-          props.navigation.navigate({
-            routeName: "TripDetail",
-            params: {
-              tripId: itemData.item.id,
-            },
-          });
-        }}
-        duration={itemData.item.duration}
-        complexity={itemData.item.complexity}
-        affordability={itemData.item.affordability}
-        image={itemData.item.imageUrl}
-      />
-    );
-  };
-
+export default function CountryTripScreen({ route, navigation }) {
+  const { countryId } = route.params;
   const displayedTrips = TRIPS.filter(
     (trip) => trip.countryIds.indexOf(countryId) >= 0
   );
-  console.log(displayedTrips);
+
+  // 2. 
+  const renderTripItem = ({item}) => {
+    return (
+      <TripItem
+        title={item.title}
+        onSelectTrip={() => {}}
+        duration={item.duration}
+        complexity={item.complexity}
+        affordability={item.affordability}
+        image={item.imageUrl}
+        // Add
+        onSelectTrip={() => {
+          navigation.navigate("TripDetail",{tripId: item.id, tripName: item.title});
+        }}
+      />    );
+  };
+  
   return (
     <View style={styles.container}>
+      {/*  3.  */}
       <FlatList
         data={displayedTrips}
         keyExtractor={(item, index) => item.id}
         renderItem={renderTripItem}
         style={{ width: "100%" }}
       />
+
+
     </View>
   );
-};
-
-CountryTripScreen.navigationOptions = (navigationData) => {
-  const countryId = navigationData.navigation.getParam("countryId");
-  const selectedCountry = COUNTRIES.find((country) => country.id === countryId);
-
-  return {
-    headerTitle: selectedCountry.title,
-  };
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    justifyContent: "center",
+    backgroundColor: "#fff",
     alignItems: "center",
+    justifyContent: "center",
   },
 });
-
-export default CountryTripScreen;
 ```
 
 ## 2. TripDetailScreen.js
 
 ```js
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { StyleSheet, Text, View, Button } from 'react-native';
 // import:
 import { TRIPS } from "../data/dummy-data";
 
-const TripDetailScreen = (props) => {
+export default function TripDetailScreen({ navigation, route }) {
+  
   // store tripId from CountryTripScreen:
-  const tripId = props.navigation.getParam("tripId");
-
+  const { tripId } = route.params;
   // find all data for tripId:
   const selectedTrip = TRIPS.find((trip) => trip.id === tripId);
+
   return (
     <View style={styles.container}>
-      {/* Change to dynamic text */}
-      <Text>{selectedTrip.title}</Text>
+     {/* Change to dynamic text */}
+     <Text>{selectedTrip.title}</Text>
       <Button
         title=" go back to countries"
-        onPress={() => props.navigation.popToTop()}
+        onPress={() => navigation.popToTop()}
       />
     </View>
   );
-};
-
-// Add navigation options object -> we can use the dynamic data.
-TripDetailScreen.navigationOptions = (navigationData) => {
-  const tripId = navigationData.navigation.getParam("tripId");
-  const selectedTrip = TRIPS.find((trip) => trip.id === tripId);
-  return {
-    headerTitle: selectedTrip.title,
-  };
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default TripDetailScreen;
+```
+
+## 3. navigator: 
+```js
+<Stack.Screen 
+        name="TripDetail" 
+        component={TripDetailScreen}
+        // Add:
+        options={({ route }) => ({ title: route.params.tripName })}
+        />
+
 ```
